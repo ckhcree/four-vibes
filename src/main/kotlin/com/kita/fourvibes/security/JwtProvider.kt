@@ -19,7 +19,6 @@ class JwtProvider(
     @Value("\${secret}") private val secret: String,
     @Value("\${expiration-hours}") private val expirationHours: Long,
 ) {
-    
     fun generateToken(subject: String, expirationPeriod: Duration): String {
         val claims: Claims = Jwts.claims().build()
 
