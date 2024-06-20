@@ -8,20 +8,20 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserService(
-    private val memberRepository: UserRepository
+    private val userRepository: UserRepository
 ) {
     fun signUp(signUpRequest: SignUpRequest): Boolean {
-        val member = User(
+        val user = User(
             password = signUpRequest.password,
             passwordcheck = signUpRequest.passwordcheck,
             nickname = signUpRequest.nickname
         )
-        memberRepository.save(member)
+        userRepository.save(user)
         return true
     }
 
     fun signIn(signInRequest: SignInRequest): Boolean {
-        val member = User(
+        val user = User(
             password = signInRequest.password,
             nickname = signInRequest.nickname
         )
