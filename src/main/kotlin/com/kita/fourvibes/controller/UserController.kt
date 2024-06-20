@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/member")
-class MemberController(
-    memberService: UserService,
+class UserController(
+    userService: UserService,
 ) {
     @PostMapping("/sign-up")
     fun signUp(
