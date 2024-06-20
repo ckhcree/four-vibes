@@ -20,7 +20,7 @@ class JwtProvider(
     @Value("\${expiration-hours}") private val expirationHours: Long,
 ) {
     fun generateToken(subject: String, role: String, expirationPeriod: Duration): String {
-        val claims: Claims = Jwts.claims().add(mapOf("role" to role)).build()
+        val claims: Claims = Jwts.claims().build()
 
         val now = Instant.now()
         val key = Keys.hmacShaKeyFor(secret.toByteArray(StandardCharsets.UTF_8))
