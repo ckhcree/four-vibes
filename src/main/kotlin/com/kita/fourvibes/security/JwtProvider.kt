@@ -17,7 +17,7 @@ import java.util.Date
 class JwtProvider(
     @Value("\${issuer}") private val issuer: String,
     @Value("\${secret}") private val secret: String,
-    @Value("\${expiration-hours}") private val expirationHours: Long,
+    @Value("\${expiration-hour}") private val expirationHour: Long,
 ) {
     fun generateToken(subject: String, expirationPeriod: Duration): String {
         val claims: Claims = Jwts.claims().build()
