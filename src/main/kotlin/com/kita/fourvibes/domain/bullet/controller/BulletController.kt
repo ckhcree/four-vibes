@@ -2,6 +2,7 @@ package com.kita.fourvibes.domain.bullet.controller
 
 import com.kita.fourvibes.domain.bullet.controller.request.BulletResponse
 import com.kita.fourvibes.domain.bullet.controller.request.CreateBulletRequest
+import com.kita.fourvibes.domain.bullet.controller.request.DeleteBulletRequest
 import com.kita.fourvibes.domain.bullet.controller.request.UpdateBulletRequest
 import com.kita.fourvibes.domain.bullet.service.BulletService
 import jakarta.validation.Valid
@@ -29,14 +30,19 @@ class BulletController(
     }
 
     @GetMapping("/{id}")
-    fun getBulletById(@PathVariable id: Long): ResponseEntity<BulletResponse> {
+    fun getBulletById(
+        @PathVariable id: Long
+    ): ResponseEntity<BulletResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(bulletService.findBulletById(id))
     }
 
     @PostMapping()
-    fun createBullet(@RequestBody @Valid createBulletRequest: CreateBulletRequest): ResponseEntity<BulletResponse> {
+    fun createBullet(
+        @RequestBody
+        @Valid createBulletRequest: CreateBulletRequest
+    ): ResponseEntity<BulletResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(bulletService.createBullet(createBulletRequest))
@@ -53,10 +59,12 @@ class BulletController(
     }
 
     @DeleteMapping("/{id}")
-    fun deleteBullet(@PathVariable id: Long): ResponseEntity<Unit> {
-        bulletService.deleteBullet(id)
+    fun deleteBullet(
+        @PathVariable id: Long,
+        @RequestBody deleteBulletRequest: DeleteBulletRequest
+    ): ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
-            .body(null)
+            .body(bulletService.deleteBullet(id, deleteBulletRequest))
     }
 }

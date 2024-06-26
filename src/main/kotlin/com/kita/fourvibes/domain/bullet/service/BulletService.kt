@@ -2,6 +2,7 @@ package com.kita.fourvibes.domain.bullet.service
 
 import com.kita.fourvibes.domain.bullet.controller.request.BulletResponse
 import com.kita.fourvibes.domain.bullet.controller.request.CreateBulletRequest
+import com.kita.fourvibes.domain.bullet.controller.request.DeleteBulletRequest
 import com.kita.fourvibes.domain.bullet.controller.request.UpdateBulletRequest
 import com.kita.fourvibes.domain.bullet.repository.BulletRepository
 import com.kita.fourvibes.domain.bullet.repository.model.Bullet
@@ -78,7 +79,22 @@ class BulletService(
     }
 
     @Transactional
-    fun deleteBullet(id: Long) {
+    fun deleteBullet(id: Long, deleteBulletRequest: DeleteBulletRequest) {
+
+        val tokenforDelete = deleteBulletRequest.token
+
+        val validationresult = jwtProvider.validateToken(tokenforDelete)
+
+        if (validationresult.isFailure) {
+            throw IllegalArgumentException("유효한 토큰일 경우에만 게시글 삭제 가능")
+        }
+
+        val foundBullet = bulletRepository.findByIdOrNull(id)
+
+        // 파운드 불릿의 유저아이디랑 , 토큰의 유저아이디가 동일해야함
+        if (foundBullet?.user?.id != validationresult.getOrNull()?.payload?.subject?.toLong()) {
+            throw IllegalArgumentException("해당 사용자가 작성한 게시글만 삭제 가능")
+        }
 
         bulletRepository.deleteById(id)
     }
