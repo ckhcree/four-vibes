@@ -17,32 +17,32 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/v1/bullet")
+@RequestMapping("/api/v1/bullets")
 class BulletController(
     private val bulletService: BulletService,
 ) {
-    @GetMapping("/getBullet")
+    @GetMapping()
     fun getAllBullet(): ResponseEntity<List<BulletResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(bulletService.findAllBullets())
     }
 
-    @GetMapping("/getBullet/{id}")
+    @GetMapping("/{id}")
     fun getBulletById(@PathVariable id: Long): ResponseEntity<BulletResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(bulletService.findBulletById(id))
     }
 
-    @PostMapping("/createBullet")
+    @PostMapping()
     fun createBullet(@RequestBody @Valid createBulletRequest: CreateBulletRequest): ResponseEntity<BulletResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(bulletService.createBullet(createBulletRequest))
     }
 
-    @PutMapping("/updateBullet/{id}")
+    @PutMapping("/{id}")
     fun updateBullet(
         @PathVariable id: Long,
         @RequestBody updateBulletRequest: UpdateBulletRequest
@@ -52,7 +52,7 @@ class BulletController(
             .body(bulletService.updateBullet(id, updateBulletRequest))
     }
 
-    @DeleteMapping("/deleteBullet/{id}")
+    @DeleteMapping("/{id}")
     fun deleteBullet(@PathVariable id: Long): ResponseEntity<Unit> {
         bulletService.deleteBullet(id)
         return ResponseEntity
