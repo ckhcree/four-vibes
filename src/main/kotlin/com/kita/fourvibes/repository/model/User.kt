@@ -18,8 +18,5 @@ data class User(
     val password: String = "",
 
     @Column
-    val passwordcheck: String = "",
-
-    @Column
     val nickname: String = "",
 )
