@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 @Entity
@@ -39,9 +40,14 @@ class Bullet(
     @Column(nullable = false, updatable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()
 
+    @UpdateTimestamp
+    @Column(nullable = true, updatable = true)
+    var updatedAt: LocalDateTime? = null
+
     fun updateBullet(updateBulletRequest: UpdateBulletRequest) {
         nickname = updateBulletRequest.nickname
         title = updateBulletRequest.title
         memo = updateBulletRequest.memo
+        updatedAt = LocalDateTime.now()
     }
 }

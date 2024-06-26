@@ -9,6 +9,7 @@ data class BulletResponse(
     val title: String,
     val memo: String,
     val createdAt: LocalDateTime?,
+    var updatedAt: LocalDateTime?,
 ) {
     companion object {
         fun from(bullet: Bullet): BulletResponse {
@@ -18,6 +19,7 @@ data class BulletResponse(
                 title = bullet.title,
                 memo = bullet.memo,
                 createdAt = bullet.createdAt,
+                updatedAt = bullet.updatedAt,
             )
         }
     }
