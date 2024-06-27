@@ -31,8 +31,8 @@ class BulletService(
     }
 
     @Transactional
-    fun createBullet(createBulletrequest: CreateBulletRequest): BulletResponse {
-        val validation = jwtProvider.validateToken(createBulletrequest.token)
+    fun createBullet(createBulletRequest: CreateBulletRequest): BulletResponse {
+        val validation = jwtProvider.validateToken(createBulletRequest.token)
         if (validation.isFailure) {
             throw IllegalArgumentException("유효한 토큰일 경우에만 게시글 작성 가능")
         }
@@ -40,7 +40,7 @@ class BulletService(
         val user = userRepository.findByIdOrNull(validation.getOrNull()?.payload?.subject?.toLong())
             ?: throw IllegalArgumentException("유효한 토큰 사용자만 게시글 작성 가능")
 
-        val bullet = Bullet(createBulletrequest.nickname, createBulletrequest.title, createBulletrequest.memo, user)
+        val bullet = Bullet(createBulletRequest.nickname, createBulletRequest.title, createBulletRequest.memo, user)
 
         val createdBullet = bulletRepository.save(bullet)
 
