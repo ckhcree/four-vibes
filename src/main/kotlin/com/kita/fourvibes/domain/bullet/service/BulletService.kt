@@ -98,4 +98,12 @@ class BulletService(
 
         bulletRepository.deleteById(id)
     }
+
+    @Transactional
+    fun thumbsUp() {
+    }
+
+    @Transactional
+    fun cancelThumbsUp() {
+    }
 }

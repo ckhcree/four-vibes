@@ -22,12 +22,12 @@ class Comment(
     @Column
     var ment: String,
 
-    @JoinColumn(name = "bullet_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bullet_id")
     var bullet: Bullet,
 
-    @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     val user: User,
 ) {
     @Id

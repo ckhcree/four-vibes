@@ -67,4 +67,22 @@ class BulletController(
             .status(HttpStatus.NO_CONTENT)
             .body(bulletService.deleteBullet(bulletId, deleteBulletRequest))
     }
+
+    @PostMapping("/{bulletId}/thumbsups")
+    fun likeBullet(
+        @PathVariable bulletId: Long,
+    ): ResponseEntity<Unit> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(bulletService.thumbsUp())
+    }
+
+    @DeleteMapping("/{bulletId}/thumbsups")
+    fun cancelLikeBullet(
+        @PathVariable bulletId: Long,
+    ): ResponseEntity<Unit> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(bulletService.cancelThumbsUp())
+    }
 }
