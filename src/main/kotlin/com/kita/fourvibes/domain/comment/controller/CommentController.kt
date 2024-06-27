@@ -14,35 +14,36 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/v1/bullets/{id}/comments")
+@RequestMapping("/api/v1/bullets/{bulletId}/comments")
 class CommentController(
     private val commentService: CommentService
 ) {
     @PostMapping
     fun createComment(
+        @PathVariable bulletId: Long,
         @RequestBody commentRequest: CommentRequest
     ): ResponseEntity<CommentResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(commentService.createComment(commentRequest))
+            .body(commentService.createComment(bulletId, commentRequest))
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{commentId}")
     fun updateComment(
-        @PathVariable id: Long,
+        @PathVariable bulletId: Long, @PathVariable commentId: Long,
         @RequestBody commentRequest: CommentRequest
     ): ResponseEntity<CommentResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(commentService.updateComment(id, commentRequest))
+            .body(commentService.updateComment(bulletId, commentRequest))
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{commentId}")
     fun deleteComment(
-        @PathVariable id: Long,
+        @PathVariable bulletId: Long, @PathVariable commentId: Long,
         @RequestBody commentRequest: CommentRequest
     ): ResponseEntity<Unit> {
-        commentService.deleteComment(id, commentRequest)
+        commentService.deleteComment(bulletId, commentRequest)
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
             .body(null)

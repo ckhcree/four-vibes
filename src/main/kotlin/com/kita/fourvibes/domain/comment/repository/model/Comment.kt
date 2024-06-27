@@ -1,6 +1,7 @@
 package com.kita.fourvibes.domain.comment.repository.model
 
 import com.kita.fourvibes.domain.bullet.repository.model.Bullet
+import com.kita.fourvibes.domain.comment.controller.request.CommentRequest
 import com.kita.fourvibes.repository.model.User
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -40,4 +41,9 @@ class Comment(
     @UpdateTimestamp
     @Column(nullable = true, updatable = true)
     var updatedAt: LocalDateTime? = null
+
+    fun updateComment(commentRequest: CommentRequest) {
+        ment = commentRequest.ment
+        updatedAt = LocalDateTime.now()
+    }
 }

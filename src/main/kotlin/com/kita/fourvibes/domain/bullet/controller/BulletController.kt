@@ -29,13 +29,13 @@ class BulletController(
             .body(bulletService.findAllBullets())
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{bulletId}")
     fun getBulletById(
-        @PathVariable id: Long
+        @PathVariable bulletId: Long
     ): ResponseEntity<BulletResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(bulletService.findBulletById(id))
+            .body(bulletService.findBulletById(bulletId))
     }
 
     @PostMapping()
@@ -48,23 +48,23 @@ class BulletController(
             .body(bulletService.createBullet(createBulletRequest))
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{bulletId}")
     fun updateBullet(
-        @PathVariable id: Long,
+        @PathVariable bulletId: Long,
         @RequestBody updateBulletRequest: UpdateBulletRequest
     ): ResponseEntity<BulletResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(bulletService.updateBullet(id, updateBulletRequest))
+            .body(bulletService.updateBullet(bulletId, updateBulletRequest))
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{bulletId}")
     fun deleteBullet(
-        @PathVariable id: Long,
+        @PathVariable bulletId: Long,
         @RequestBody deleteBulletRequest: DeleteBulletRequest
     ): ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
-            .body(bulletService.deleteBullet(id, deleteBulletRequest))
+            .body(bulletService.deleteBullet(bulletId, deleteBulletRequest))
     }
 }
