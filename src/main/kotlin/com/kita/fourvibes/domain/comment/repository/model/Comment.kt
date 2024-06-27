@@ -1,6 +1,6 @@
-package com.kita.fourvibes.domain.bullet.repository.model
+package com.kita.fourvibes.domain.comment.repository.model
 
-import com.kita.fourvibes.domain.bullet.controller.request.UpdateBulletRequest
+import com.kita.fourvibes.domain.bullet.repository.model.Bullet
 import com.kita.fourvibes.repository.model.User
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -16,22 +16,19 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "bullets")
-class Bullet(
+@Table(name = "comments")
+class Comment(
     @Column
-    val nickname: String,
+    var ment: String,
 
-    @Column
-    var title: String,
-
-    @Column
-    var memo: String,
+    @JoinColumn(name = "bullet_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    var bullet: Bullet,
 
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
     val user: User,
 ) {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
@@ -43,10 +40,4 @@ class Bullet(
     @UpdateTimestamp
     @Column(nullable = true, updatable = true)
     var updatedAt: LocalDateTime? = null
-
-    fun updateBullet(updateBulletRequest: UpdateBulletRequest) {
-        title = updateBulletRequest.title
-        memo = updateBulletRequest.memo
-        updatedAt = LocalDateTime.now()
-    }
 }

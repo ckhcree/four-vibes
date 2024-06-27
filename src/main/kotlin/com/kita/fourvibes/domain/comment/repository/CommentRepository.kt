@@ -1,4 +1,6 @@
 package com.kita.fourvibes.domain.comment.repository
 
-interface CommentRepository {
-}
+import com.kita.fourvibes.domain.comment.repository.model.Comment
+import org.springframework.data.jpa.repository.JpaRepository
+
+interface CommentRepository : JpaRepository<Comment, Long>

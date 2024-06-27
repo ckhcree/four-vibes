@@ -1,4 +1,7 @@
 package com.kita.fourvibes.domain.comment.service
 
-class CommentService {
-}
+import com.kita.fourvibes.domain.comment.repository.CommentRepository
+import org.springframework.stereotype.Service
+
+@Service
+class CommentService(commentRepository: CommentRepository)

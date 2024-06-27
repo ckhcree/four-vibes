@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class BulletService(
     private val bulletRepository: BulletRepository,
-    private val jwtProvider: JwtProvider,
     private val userRepository: UserRepository,
+    private val jwtProvider: JwtProvider,
 ) {
 
     fun findAllBullets(): List<BulletResponse>? {
