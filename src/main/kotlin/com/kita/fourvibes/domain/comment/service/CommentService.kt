@@ -28,7 +28,7 @@ class CommentService(
         val user = userRepository.findByIdOrNull(validation.getOrNull()?.payload?.subject?.toLong())
             ?: throw IllegalArgumentException("유효한 토큰 사용자만 댓글 작성 가능")
 
-        val foundBullet = bulletRepository.findByIdOrNull(bulletId)
+        val foundBullet = bulletRepository.findByIdOrNull(bulletId) // bulletId ???
             ?: throw IllegalArgumentException("유효한 게시글에만 댓글 작성 가능")
 
         val comment = Comment(commentRequest.ment, foundBullet, user)
@@ -46,15 +46,16 @@ class CommentService(
         }
 
         val foundComment = commentRepository.findByIdOrNull(id)
+            ?: throw IllegalArgumentException("Comment not found")
 
         // 파운드 코멘트의 유저아이디랑, 토큰의 유저아이디가 동일해야함 // 확인 필요
-        if (foundComment?.user?.id != validation.getOrNull()?.payload?.subject?.toLong()) {
+        if (foundComment.user.id != validation.getOrNull()?.payload?.subject?.toLong()) {
             throw IllegalArgumentException("해당 사용자가 작성한 댓글만 수정 가능")
         }
 
-        foundComment?.updateComment(commentRequest)
+        foundComment.updateComment(commentRequest)
 
-        return foundComment?.let { CommentResponse.from(it) }
+        return foundComment.let { CommentResponse.from(it) }
     }
 
     @Transactional
@@ -65,9 +66,10 @@ class CommentService(
         }
 
         val foundComment = commentRepository.findByIdOrNull(id)
+            ?: throw IllegalArgumentException("Comment not found")
 
         // 파운드 코멘트의 유저아이디랑, 토큰의 유저아이디가 동일해야함 // 확인 필요
-        if (foundComment?.user?.id != validation.getOrNull()?.payload?.subject?.toLong()) {
+        if (foundComment.user.id != validation.getOrNull()?.payload?.subject?.toLong()) {
             throw IllegalArgumentException("해당 사용자가 작성한 댓글만 삭제 가능")
         }
 
