@@ -122,13 +122,9 @@ class BulletService(
 
         val userId = extractUserIdFromToken(thumbsUpRequest.token)
 
-        val bullet = bulletRepository.findByIdOrNull(bulletId)
-            ?: throw IllegalArgumentException("Bullet not found")
-        val user = userRepository.findByIdOrNull(userId)
-            ?: throw IllegalArgumentException("User not found")
-
         val thumbsUpId = ThumbsUpId(bulletId = bulletId, userId = userId)
-        val thumbsUp = ThumbsUp(id = thumbsUpId, bullet = bullet, user = user)
+        val thumbsUp = thumbsUpRepository.findByIdOrNull(thumbsUpId)
+            ?: throw IllegalArgumentException("ThumbsUp not found")
 
         thumbsUpRepository.delete(thumbsUp)
     }
