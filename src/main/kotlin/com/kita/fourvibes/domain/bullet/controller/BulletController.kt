@@ -1,8 +1,10 @@
 package com.kita.fourvibes.domain.bullet.controller
 
 import com.kita.fourvibes.domain.bullet.controller.request.BulletResponse
+import com.kita.fourvibes.domain.bullet.controller.request.BulletResponseWithComments
 import com.kita.fourvibes.domain.bullet.controller.request.CreateBulletRequest
 import com.kita.fourvibes.domain.bullet.controller.request.DeleteBulletRequest
+import com.kita.fourvibes.domain.bullet.controller.request.ThumbsUpRequest
 import com.kita.fourvibes.domain.bullet.controller.request.UpdateBulletRequest
 import com.kita.fourvibes.domain.bullet.service.BulletService
 import jakarta.validation.Valid
@@ -22,23 +24,23 @@ import org.springframework.web.bind.annotation.RestController
 class BulletController(
     private val bulletService: BulletService,
 ) {
-    @GetMapping()
-    fun getAllBullet(): ResponseEntity<List<BulletResponse>> {
+    @GetMapping
+    fun getAllBullets(): ResponseEntity<List<BulletResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(bulletService.findAllBullets())
+            .body(bulletService.getAllBullets())
     }
 
     @GetMapping("/{bulletId}")
     fun getBulletById(
         @PathVariable bulletId: Long
-    ): ResponseEntity<BulletResponse> {
+    ): ResponseEntity<BulletResponseWithComments> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(bulletService.findBulletById(bulletId))
+            .body(bulletService.getBulletById(bulletId))
     }
 
-    @PostMapping()
+    @PostMapping
     fun createBullet(
         @RequestBody
         @Valid createBulletRequest: CreateBulletRequest
@@ -69,20 +71,24 @@ class BulletController(
     }
 
     @PostMapping("/{bulletId}/thumbsups")
-    fun likeBullet(
+    fun thumbsUpBullet(
         @PathVariable bulletId: Long,
+        @RequestBody thumbsUpRequest: ThumbsUpRequest
     ): ResponseEntity<Unit> {
+        bulletService.thumbsUpBullet(bulletId, thumbsUpRequest)
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(bulletService.thumbsUp())
+            .build()
     }
 
     @DeleteMapping("/{bulletId}/thumbsups")
-    fun cancelLikeBullet(
+    fun cancelThumbsUpBullet(
         @PathVariable bulletId: Long,
+        @RequestBody thumbsUpRequest: ThumbsUpRequest
     ): ResponseEntity<Unit> {
+        bulletService.cancelThumbsUpBullet(bulletId, thumbsUpRequest)
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(bulletService.cancelThumbsUp())
+            .build()
     }
 }

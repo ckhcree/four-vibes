@@ -22,7 +22,6 @@ class JwtProvider(
     @Value("\${auth.jwt.expiration-hour}")
     private val expirationHour: Long,
 ) {
-
     fun generateAccessToken(nickname: String, subject: String): String {
         return generateToken(nickname, subject, Duration.ofHours(expirationHour))
     }
@@ -35,9 +34,11 @@ class JwtProvider(
     }
 
     private fun generateToken(nickname: String, subject: String, expirationPeriod: Duration): String {
-        val claims: Claims = Jwts.claims().add(mapOf("nickname" to nickname)).build()
+
         val now = Instant.now()
         val key = Keys.hmacShaKeyFor(secret.toByteArray(StandardCharsets.UTF_8))
+
+        val claims: Claims = Jwts.claims().add(mapOf("nickname" to nickname)).build()
 
         return Jwts.builder()
             .subject(subject)
