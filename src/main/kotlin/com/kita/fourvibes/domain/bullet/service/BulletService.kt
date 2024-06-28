@@ -44,12 +44,10 @@ class BulletService(
 
     @Transactional
     fun createBullet(createBulletRequest: CreateBulletRequest): BulletResponse {
-        val validation = jwtProvider.validateToken(createBulletRequest.token)
-        if (validation.isFailure) {
-            throw IllegalArgumentException("유효한 토큰일 경우에만 게시글 작성 가능")
-        }
 
-        val user = userRepository.findByIdOrNull(validation.getOrNull()?.payload?.subject?.toLong())
+        val userId = extractUserIdFromToken(createBulletRequest.token)
+
+        val user = userRepository.findByIdOrNull(userId)
             ?: throw IllegalArgumentException("유효한 토큰 사용자만 게시글 작성 가능")
 
         val bullet = Bullet(createBulletRequest.nickname, createBulletRequest.title, createBulletRequest.memo, user)
@@ -61,16 +59,14 @@ class BulletService(
 
     @Transactional
     fun updateBullet(id: Long, updateBulletRequest: UpdateBulletRequest): BulletResponse? {
-        val validation = jwtProvider.validateToken(updateBulletRequest.token)
-        if (validation.isFailure) {
-            throw IllegalArgumentException("유효한 토큰일 경우에만 게시글 수정 가능")
-        }
+
+        val userId = extractUserIdFromToken(updateBulletRequest.token)
 
         val foundBullet = bulletRepository.findByIdOrNull(id)
             ?: throw IllegalArgumentException("Bullet not found")
 
         // 파운드 불릿의 유저아이디랑 , 토큰의 유저아이디가 동일해야함
-        if (foundBullet.user.id != validation.getOrNull()?.payload?.subject?.toLong()) {
+        if (foundBullet.user.id != userId) {
             throw IllegalArgumentException("해당 사용자가 작성한 게시글만 수정 가능")
         }
 
@@ -81,16 +77,14 @@ class BulletService(
 
     @Transactional
     fun deleteBullet(id: Long, deleteBulletRequest: DeleteBulletRequest) {
-        val validation = jwtProvider.validateToken(deleteBulletRequest.token)
-        if (validation.isFailure) {
-            throw IllegalArgumentException("유효한 토큰일 경우에만 게시글 삭제 가능")
-        }
+
+        val userId = extractUserIdFromToken(deleteBulletRequest.token)
 
         val foundBullet = bulletRepository.findByIdOrNull(id)
             ?: throw IllegalArgumentException("Bullet not found")
 
         // 파운드 불릿의 유저아이디랑 , 토큰의 유저아이디가 동일해야함
-        if (foundBullet.user.id != validation.getOrNull()?.payload?.subject?.toLong()) {
+        if (foundBullet.user.id != userId) {
             throw IllegalArgumentException("해당 사용자가 작성한 게시글만 삭제 가능")
         }
 
@@ -132,7 +126,7 @@ class BulletService(
     private fun extractUserIdFromToken(token: String): Long {
         val validation = jwtProvider.validateToken(token)
         if (validation.isFailure) {
-            throw IllegalArgumentException("유효한 토큰일 경우에만 좋아요/ 좋아요취소 가능")
+            throw IllegalArgumentException("유효한 토큰일 경우에만 작업 가능")
         }
         return validation.getOrNull()!!.payload.subject.toLong()
     }

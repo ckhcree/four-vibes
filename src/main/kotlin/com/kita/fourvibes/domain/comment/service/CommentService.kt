@@ -21,14 +21,13 @@ class CommentService(
 
     @Transactional
     fun createComment(bulletId: Long, commentRequest: CommentRequest): CommentResponse {
-        val validation = jwtProvider.validateToken(commentRequest.token)
-        if (validation.isFailure) {
-            throw IllegalArgumentException("유효한 토큰일 경우에만 댓글 작성 가능")
-        }
-        val user = userRepository.findByIdOrNull(validation.getOrNull()?.payload?.subject?.toLong())
+
+        val userId = extractUserIdFromToken(commentRequest.token)
+
+        val user = userRepository.findByIdOrNull(userId)
             ?: throw IllegalArgumentException("유효한 토큰 사용자만 댓글 작성 가능")
 
-        val foundBullet = bulletRepository.findByIdOrNull(bulletId) // bulletId ???
+        val foundBullet = bulletRepository.findByIdOrNull(bulletId)
             ?: throw IllegalArgumentException("유효한 게시글에만 댓글 작성 가능")
 
         val comment = Comment(commentRequest.ment, foundBullet, user)
@@ -40,16 +39,14 @@ class CommentService(
 
     @Transactional
     fun updateComment(id: Long, commentRequest: CommentRequest): CommentResponse? {
-        val validation = jwtProvider.validateToken(commentRequest.token)
-        if (validation.isFailure) {
-            throw IllegalArgumentException("유효한 토큰일 경우에만 댓글 수정 가능")
-        }
+
+        val userId = extractUserIdFromToken(commentRequest.token)
 
         val foundComment = commentRepository.findByIdOrNull(id)
             ?: throw IllegalArgumentException("Comment not found")
 
-        // 파운드 코멘트의 유저아이디랑, 토큰의 유저아이디가 동일해야함 // 확인 필요
-        if (foundComment.user.id != validation.getOrNull()?.payload?.subject?.toLong()) {
+        // 파운드 코멘트의 유저아이디랑, 토큰의 유저아이디가 동일해야함
+        if (foundComment.user.id != userId) {
             throw IllegalArgumentException("해당 사용자가 작성한 댓글만 수정 가능")
         }
 
@@ -60,19 +57,25 @@ class CommentService(
 
     @Transactional
     fun deleteComment(id: Long, commentRequest: CommentRequest) {
-        val validation = jwtProvider.validateToken(commentRequest.token)
-        if (validation.isFailure) {
-            throw IllegalArgumentException("유효한 토큰일 경우에만 댓글 삭제 가능")
-        }
+
+        val userId = extractUserIdFromToken(commentRequest.token)
 
         val foundComment = commentRepository.findByIdOrNull(id)
             ?: throw IllegalArgumentException("Comment not found")
 
-        // 파운드 코멘트의 유저아이디랑, 토큰의 유저아이디가 동일해야함 // 확인 필요
-        if (foundComment.user.id != validation.getOrNull()?.payload?.subject?.toLong()) {
+        // 파운드 코멘트의 유저아이디랑, 토큰의 유저아이디가 동일해야함
+        if (foundComment.user.id != userId) {
             throw IllegalArgumentException("해당 사용자가 작성한 댓글만 삭제 가능")
         }
 
         commentRepository.deleteById(id)
+    }
+
+    private fun extractUserIdFromToken(token: String): Long {
+        val validation = jwtProvider.validateToken(token)
+        if (validation.isFailure) {
+            throw IllegalArgumentException("유효한 토큰일 경우에만 작업 가능")
+        }
+        return validation.getOrNull()!!.payload.subject.toLong()
     }
 }

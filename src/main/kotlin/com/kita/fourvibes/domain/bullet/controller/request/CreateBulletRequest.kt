@@ -12,14 +12,4 @@ data class CreateBulletRequest(
     val memo: String,
 
     val token: String,
-) {
-    // companion object {
-    //     fun to(bullet: Bullet): BulletResponse {
-    //         return BulletResponse(
-    //             nickname = bullet.nickname,
-    //             title = bullet.title,
-    //             memo = bullet.memo,
-    //         )
-    //     }
-    // }
-}
+)
